@@ -88,6 +88,10 @@ td:nth-child(2),td:nth-child(3){
 tbody tr:last-child td{
   border-bottom:0;
 }
+tbody tr.upcoming{
+  background:#e0f2eb;
+  font-weight:bold;
+}
 #nextPrayer{
   margin-top:16px;
   padding:14px;

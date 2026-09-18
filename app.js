@@ -7,22 +7,49 @@ async function loadData() {
            String(d.getDate()).padStart(2, '0');
   }
 
-  function toMinutes(time) {
+  /*
+   * The JSON stores times without AM/PM:
+   * Fajr/Sunrise = AM
+   * Dhuhr = PM (12:xx)
+   * Asr = PM (03:xx)
+   * Maghrib = PM (06:xx)
+   * Isha = PM (07:xx)
+   */
+  function prayerToMinutes(time, name) {
     const [hours, minutes] = time.split(':').map(Number);
-    return (hours % 12) * 60 + minutes;
+    let h = hours;
+
+    if (name === 'Asr' || name === 'Maghrib' || name === 'Isha') {
+      h += 12;
+    }
+
+    return h * 60 + minutes;
   }
 
-  function addMinutes(time, minutesToAdd) {
-    const total = toMinutes(time) + minutesToAdd;
+  function addMinutes(time, name, minutesToAdd) {
+    const total = prayerToMinutes(time, name) + minutesToAdd;
     const hours = Math.floor(total / 60) % 24;
     const minutes = total % 60;
-    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+    return String(hours).padStart(2, '0') + ':' +
+           String(minutes).padStart(2, '0');
   }
 
-  function formatTime(time) {
-    const [hours, minutes] = time.split(':').map(Number);
+  function formatTime(time, name) {
+    let totalMinutes;
+
+    // A calculated Salah time is already a 24-hour value.
+    if (name === 'salah') {
+      const [hours, minutes] = time.split(':').map(Number);
+      totalMinutes = hours * 60 + minutes;
+    } else {
+      totalMinutes = prayerToMinutes(time, name);
+    }
+
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const minutes = totalMinutes % 60;
     const suffix = hours >= 12 ? 'PM' : 'AM';
     const displayHour = hours % 12 || 12;
+
     return `${String(displayHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${suffix}`;
   }
 
@@ -35,7 +62,8 @@ async function loadData() {
       Isha: 20
     };
 
-    return delays[name] === undefined ? null : addMinutes(adhan, delays[name]);
+    if (delays[name] === undefined) return null;
+    return addMinutes(adhan, name, delays[name]);
   }
 
   function getRowForDate(date) {
@@ -54,6 +82,7 @@ async function loadData() {
     ].map(([name, adhan]) => ({
       name,
       adhan,
+      adhanMinutes: prayerToMinutes(adhan, name),
       salah: salahTime(name, adhan)
     }));
   }
@@ -77,55 +106,47 @@ async function loadData() {
         ${prayers.map(p => `
           <tr>
             <td>${p.name}</td>
-            <td>${formatTime(p.adhan)}</td>
-            <td>${p.salah ? formatTime(p.salah) : '—'}</td>
+            <td>${formatTime(p.adhan, p.name)}</td>
+            <td>${p.salah ? formatTime(p.salah, 'salah') : '—'}</td>
           </tr>
         `).join('')}
       </tbody>
     `;
 
-    // Determine the currently active prayer from today's ADHAN times.
-    const timedPrayers = prayers.filter(p => p.name !== 'Sunrise');
+    // Sunrise is displayed in the table but is not treated as a prayer
+    // for the upcoming-prayer banner.
+    const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    const prayerList = prayers.filter(p => prayerNames.includes(p.name));
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-    let currentPrayer = null;
-    let nextPrayer = null;
+    // Find the first prayer later today.
+    let upcomingPrayer = prayerList.find(p => p.adhanMinutes > nowMinutes);
 
-    for (let i = 0; i < timedPrayers.length; i++) {
-      const current = timedPrayers[i];
-      const currentMinutes = toMinutes(current.adhan);
-      const next = timedPrayers[i + 1];
-      const nextMinutes = next ? toMinutes(next.adhan) : Infinity;
-
-      if (nowMinutes >= currentMinutes && nowMinutes < nextMinutes) {
-        currentPrayer = current;
-        nextPrayer = next || null;
-        break;
-      }
+    // If all today's prayers have passed, the next prayer is tomorrow's Fajr.
+    // The timetable repeats daily, so the Fajr row from today is used for its time.
+    if (!upcomingPrayer) {
+      upcomingPrayer = prayerList[0];
     }
 
-    // After Isha or before Fajr, Isha remains the active prayer.
-    if (!currentPrayer) {
-      if (nowMinutes < toMinutes(timedPrayers[0].adhan)) {
-        currentPrayer = timedPrayers[timedPrayers.length - 1];
-        nextPrayer = timedPrayers[0];
-      } else {
-        currentPrayer = timedPrayers[timedPrayers.length - 1];
-        nextPrayer = timedPrayers[0];
+    // Highlight the upcoming prayer row.
+    document.querySelectorAll('#times tbody tr').forEach(tr => {
+      tr.classList.remove('upcoming');
+      if (tr.firstElementChild &&
+          tr.firstElementChild.textContent.trim() === upcomingPrayer.name) {
+        tr.classList.add('upcoming');
       }
-    }
+    });
 
-    // The top banner is for the UPCOMING prayer.
-    // Before Fajr (for example, after midnight), the upcoming prayer is Fajr.
-    const upcomingPrayer = nextPrayer || timedPrayers[0];
-
+    // TOP: always show the upcoming prayer, not the previously active prayer.
     document.getElementById('headerAdhan').textContent = upcomingPrayer.name;
-    document.getElementById('headerAdhanTime').textContent = formatTime(upcomingPrayer.adhan);
+    document.getElementById('headerAdhanTime').textContent =
+      formatTime(upcomingPrayer.adhan, upcomingPrayer.name);
     document.getElementById('headerSalahTime').textContent =
-      upcomingPrayer.salah ? formatTime(upcomingPrayer.salah) : '—';
+      upcomingPrayer.salah ? formatTime(upcomingPrayer.salah, 'salah') : '—';
 
     document.getElementById('nextPrayer').innerHTML =
-      `<strong>Next Prayer: ${upcomingPrayer.name}</strong><br>${formatTime(upcomingPrayer.adhan)}`;
+      `<strong>Next Prayer: ${upcomingPrayer.name}</strong><br>` +
+      `${formatTime(upcomingPrayer.adhan, upcomingPrayer.name)}`;
   }
 
   updatePrayerDisplay();
@@ -135,9 +156,18 @@ async function loadData() {
 function tick() {
   const n = new Date();
   document.getElementById('clock').innerText =
-    n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    n.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   document.getElementById('date').innerText =
-    n.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    n.toLocaleDateString([], {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 }
 
 setInterval(tick, 1000);
