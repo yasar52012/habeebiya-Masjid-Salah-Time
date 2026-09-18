@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habeebiya-masjid-v1';
+const CACHE_NAME = 'habeebiya-masjid-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './app.js',
   './prayer-times-complete.json',
   './manifest.webmanifest',
+  './favicon.png',
   './icon-192.png',
   './icon-512.png'
 ];
@@ -35,7 +36,6 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
-  // Keep same-origin app files available offline.
   if (url.origin === self.location.origin) {
     event.respondWith(
       fetch(event.request)
