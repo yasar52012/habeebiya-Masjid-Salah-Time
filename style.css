@@ -1,7 +1,104 @@
-body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0}
-.container{max-width:700px;margin:auto;padding:20px;text-align:center}
-.card{background:white;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-table{width:100%;border-collapse:collapse}
-td{padding:10px;border-bottom:1px solid #ddd}
-#clock{font-size:2rem;font-weight:bold;margin:10px}
-#nextPrayer{margin-top:20px;font-size:1.2rem;font-weight:bold}
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f6f8;
+  margin:0;
+  color:#123b30;
+}
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+  text-align:center;
+}
+h1{
+  margin:8px 0 18px;
+}
+.info-row{
+  display:flex;
+  gap:12px;
+  margin-bottom:12px;
+}
+#date,#clock{
+  flex:1;
+  background:white;
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+#clock{
+  font-size:1.4rem;
+  font-weight:bold;
+}
+.adhan-card{
+  background:#087a54;
+  color:#fff;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+}
+.status-item{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.status-item .label{
+  font-size:.9rem;
+  opacity:.9;
+}
+.status-item strong{
+  font-size:1.35rem;
+}
+.status-item span:last-child{
+  font-size:.95rem;
+}
+.divider{
+  width:1px;
+  height:55px;
+  background:rgba(255,255,255,.45);
+}
+.card{
+  background:white;
+  padding:0;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  overflow:hidden;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th{
+  background:#e0f2eb;
+  padding:11px 10px;
+  text-align:left;
+}
+td{
+  padding:11px 10px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+th:nth-child(2),th:nth-child(3),
+td:nth-child(2),td:nth-child(3){
+  text-align:center;
+}
+tbody tr:last-child td{
+  border-bottom:0;
+}
+#nextPrayer{
+  margin-top:16px;
+  padding:14px;
+  background:#e0f2eb;
+  border-radius:10px;
+  font-size:1.1rem;
+}
+@media(max-width:560px){
+  .container{padding:12px}
+  .info-row{flex-direction:column}
+  .adhan-card{gap:8px}
+  .status-item strong{font-size:1.05rem}
+  th,td{padding:9px 6px;font-size:.9rem}
+}
