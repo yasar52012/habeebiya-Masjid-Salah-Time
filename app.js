@@ -115,17 +115,17 @@ async function loadData() {
       }
     }
 
-    document.getElementById('headerAdhan').textContent = currentPrayer.name;
-    document.getElementById('headerAdhanTime').textContent = formatTime(currentPrayer.adhan);
-    document.getElementById('headerSalahTime').textContent =
-      currentPrayer.salah ? formatTime(currentPrayer.salah) : '—';
+    // The top banner is for the UPCOMING prayer.
+    // Before Fajr (for example, after midnight), the upcoming prayer is Fajr.
+    const upcomingPrayer = nextPrayer || timedPrayers[0];
 
-    if (nextPrayer) {
-      document.getElementById('nextPrayer').innerHTML =
-        `<strong>Next Prayer: ${nextPrayer.name}</strong><br>${formatTime(nextPrayer.adhan)}`;
-    } else {
-      document.getElementById('nextPrayer').textContent = 'Next Prayer: Fajr';
-    }
+    document.getElementById('headerAdhan').textContent = upcomingPrayer.name;
+    document.getElementById('headerAdhanTime').textContent = formatTime(upcomingPrayer.adhan);
+    document.getElementById('headerSalahTime').textContent =
+      upcomingPrayer.salah ? formatTime(upcomingPrayer.salah) : '—';
+
+    document.getElementById('nextPrayer').innerHTML =
+      `<strong>Next Prayer: ${upcomingPrayer.name}</strong><br>${formatTime(upcomingPrayer.adhan)}`;
   }
 
   updatePrayerDisplay();
