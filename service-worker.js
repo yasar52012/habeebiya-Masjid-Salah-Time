@@ -1,7 +1,16 @@
-const CACHE_NAME = 'habeebiya-masjid-v4';
+const CACHE_NAME = 'habeebiya-masjid-v5';
 const APP_SHELL = [
-  './','./index.html','./style.css','./app.js','./prayer-times-complete.json',
-  './manifest.webmanifest','./favicon.png','./icon-192.png','./icon-512.png'
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './prayer-times-complete.json',
+  './manifest.webmanifest',
+  './masjid-photo.jpg',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+  './favicon.png'
 ];
 
 self.addEventListener('install', event => {
@@ -14,23 +23,29 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    )).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  const url = new URL(event.request.url);
 
-  if (url.origin === self.location.origin) {
-    event.respondWith(
-      fetch(event.request).then(response => {
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // Network-first keeps GitHub Pages updates visible, while the cache
+  // provides an offline fallback.
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         return response;
-      }).catch(() => caches.match(event.request))
-    );
-  }
+      })
+      .catch(() => caches.match(event.request).then(cached => cached || Response.error()))
+  );
 });

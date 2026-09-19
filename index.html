@@ -2,62 +2,94 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#087a54">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Habeebiya">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" href="./favicon.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>Habeebiya Masjid Prayer Times</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="container">
-  <div class="masjid-header">
-    <img class="masjid-logo" src="./icon-192.png" alt="Habeebiya Masjid">
-    <div>
+<main class="container">
+
+  <header class="brand">
+    <img src="./masjid-photo.jpg" class="brand-photo" alt="Habeebiya Masjid">
+    <div class="brand-text">
       <h1>Habeebiya Masjid</h1>
-      <div class="subtitle">Prayer Times</div>
+      <p>Prayer Times</p>
     </div>
-  </div>
+  </header>
 
-  <div class="info-row">
-    <div class="info-box"><span class="info-label">Gregorian</span><div id="date"></div></div>
-    <div class="info-box"><span class="info-label">Hijri</span><div id="hijriDate">—</div></div>
-    <div class="info-box clock-box"><span class="info-label">Current Time</span><div id="clock"></div></div>
-  </div>
+  <section class="date-grid">
+    <div class="info-card">
+      <span>Gregorian Date</span>
+      <strong id="date">Loading...</strong>
+    </div>
+    <div class="info-card">
+      <span>Hijri Date</span>
+      <strong id="hijriDate">Loading...</strong>
+    </div>
+    <div class="info-card current-time-card">
+      <span>Current Time</span>
+      <strong id="clock">Loading...</strong>
+    </div>
+  </section>
 
-  <div class="adhan-card">
-    <div class="status-item">
-      <span class="label">🔊 UPCOMING ADHAN</span>
+  <section class="next-card">
+    <div class="next-main">
+      <span class="eyebrow">NEXT PRAYER</span>
       <strong id="headerAdhan">—</strong>
       <span id="headerAdhanTime">—</span>
     </div>
-    <div class="divider"></div>
-    <div class="status-item">
-      <span class="label">◷ SALAH TIME</span>
+    <div class="next-divider"></div>
+    <div class="next-main">
+      <span class="eyebrow">SALAH TIME</span>
       <strong id="headerSalahTime">—</strong>
+      <span>Congregation</span>
     </div>
-  </div>
+  </section>
 
-  <div class="countdown-card">
-    <span class="countdown-label">TIME TO NEXT PRAYER</span>
-    <strong id="countdown">00:00:00</strong>
-  </div>
+  <section class="countdown-card">
+    <span>TIME TO NEXT PRAYER</span>
+    <strong id="countdown">Loading...</strong>
+  </section>
 
-  <div class="card"><table id="times"></table></div>
-  <div id="nextPrayer"></div>
-</div>
+  <section class="table-card">
+    <table id="times">
+      <thead>
+        <tr><th>Prayer</th><th>ADHAN</th><th>SALAH TIME</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-<script src="app.js"></script>
+  <section id="nextPrayer" class="next-note"></section>
+
+  <section class="photo-card">
+    <img src="./masjid-photo.jpg" alt="Habeebiya Masjid">
+    <div>
+      <strong>Habeebiya Masjid</strong>
+      <span>Faith • Community • Together</span>
+    </div>
+  </section>
+
+</main>
+
+<script src="./app.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .catch(error => console.error('Service worker registration failed:', error));
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('./service-worker.js', {scope: './'});
+      if (registration.update) registration.update();
+    } catch (e) {
+      console.error('Service worker registration failed:', e);
+    }
   });
 }
 </script>
