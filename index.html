@@ -11,57 +11,48 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<meta name="theme-color" content="#087a54">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Habeebiya">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
 <title>Habeebiya Masjid Prayer Times</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-  <h1>Habeebiya Masjid At' Tawheed</h1>
-  <h2>Vittukkatti</h2>
+  <div class="masjid-header">
+    <img class="masjid-logo" src="./icon-192.png" alt="Habeebiya Masjid">
+    <div>
+      <h1>Habeebiya Masjid</h1>
+      <div class="subtitle">Prayer Times</div>
+    </div>
+  </div>
 
   <div class="info-row">
-    <div id="date"></div>
-    <div id="clock"></div>
+    <div class="info-box"><span class="info-label">Gregorian</span><div id="date"></div></div>
+    <div class="info-box"><span class="info-label">Hijri</span><div id="hijriDate">—</div></div>
+    <div class="info-box clock-box"><span class="info-label">Current Time</span><div id="clock"></div></div>
   </div>
 
   <div class="adhan-card">
     <div class="status-item">
-      <span class="label">🔊 ADHAN</span>
+      <span class="label">🔊 UPCOMING ADHAN</span>
       <strong id="headerAdhan">—</strong>
       <span id="headerAdhanTime">—</span>
     </div>
-
     <div class="divider"></div>
-
     <div class="status-item">
       <span class="label">◷ SALAH TIME</span>
       <strong id="headerSalahTime">—</strong>
     </div>
   </div>
 
-  <div class="card">
-    <table id="times"></table>
+  <div class="countdown-card">
+    <span class="countdown-label">TIME TO NEXT PRAYER</span>
+    <strong id="countdown">00:00:00</strong>
   </div>
 
+  <div class="card"><table id="times"></table></div>
   <div id="nextPrayer"></div>
 </div>
 
 <script src="app.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .catch(error => console.error('Service worker registration failed:', error));
-  });
-}
-</script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

@@ -2,14 +2,13 @@
   "id": "./",
   "name": "Habeebiya Masjid Prayer Times",
   "short_name": "Habeebiya",
-  "description": "Habeebiya Masjid prayer times with Adhan and Salah times.",
+  "description": "Habeebiya Masjid prayer times with Adhan, Salah time, Hijri date and next-prayer countdown.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#087a54",
+  "background_color": "#f4f6f8",
   "theme_color": "#087a54",
-  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icon-192.png",

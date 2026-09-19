@@ -1,104 +1,28 @@
 body{
-  font-family:Arial,sans-serif;
-  background:#f4f6f8;
-  margin:0;
-  color:#123b30;
+  font-family:Arial,sans-serif;background:#f4f6f8;margin:0;color:#123b30;
 }
-.container{
-  max-width:700px;
-  margin:auto;
-  padding:20px;
-  text-align:center;
-}
-h1{
-  margin:8px 0 18px;
-}
-.info-row{
-  display:flex;
-  gap:12px;
-  margin-bottom:12px;
-}
-#date,#clock{
-  flex:1;
-  background:white;
-  padding:12px;
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-#clock{
-  font-size:1.4rem;
-  font-weight:bold;
-}
-.adhan-card{
-  background:#087a54;
-  color:#fff;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-}
-.status-item{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.status-item .label{
-  font-size:.9rem;
-  opacity:.9;
-}
-.status-item strong{
-  font-size:1.35rem;
-}
-.divider{
-  width:1px;
-  height:55px;
-  background:rgba(255,255,255,.45);
-}
-.card{
-  background:white;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
-  overflow:hidden;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-th{
-  background:#e0f2eb;
-  padding:11px 10px;
-  text-align:left;
-}
-td{
-  padding:11px 10px;
-  border-bottom:1px solid #ddd;
-  text-align:left;
-}
-th:nth-child(2),th:nth-child(3),
-td:nth-child(2),td:nth-child(3){
-  text-align:center;
-}
-tbody tr:last-child td{
-  border-bottom:0;
-}
-tbody tr.upcoming{
-  background:#e0f2eb;
-  font-weight:bold;
-}
-#nextPrayer{
-  margin-top:16px;
-  padding:14px;
-  background:#e0f2eb;
-  border-radius:10px;
-  font-size:1.1rem;
-}
-@media(max-width:560px){
-  .container{padding:12px}
-  .info-row{flex-direction:column}
-  .adhan-card{gap:8px}
-  .status-item strong{font-size:1.05rem}
-  th,td{padding:9px 6px;font-size:.9rem}
+.container{max-width:760px;margin:auto;padding:18px;text-align:center;}
+.masjid-header{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 18px;}
+.masjid-logo{width:72px;height:72px;object-fit:cover;border-radius:18px;box-shadow:0 3px 10px rgba(0,0,0,.15);}
+h1{margin:0;font-size:1.65rem}.subtitle{margin-top:3px;opacity:.7;font-size:.95rem;}
+.info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.info-box{background:white;padding:11px 8px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.info-label{display:block;font-size:.72rem;text-transform:uppercase;opacity:.65;margin-bottom:5px;}
+#date,#hijriDate{font-size:.9rem}#clock{font-size:1.15rem;font-weight:bold;}
+.adhan-card{background:#087a54;color:#fff;padding:15px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-around;}
+.status-item{flex:1;display:flex;flex-direction:column;gap:4px}.status-item .label{font-size:.8rem;opacity:.9}.status-item strong{font-size:1.3rem;}
+.divider{width:1px;height:58px;background:rgba(255,255,255,.45);}
+.countdown-card{background:white;padding:13px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.countdown-label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;opacity:.65;margin-bottom:4px;}
+#countdown{font-size:1.7rem;letter-spacing:.06em;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden;}
+table{width:100%;border-collapse:collapse}th{background:#e0f2eb;padding:11px 10px;text-align:left;}
+td{padding:11px 10px;border-bottom:1px solid #ddd;text-align:left;}
+th:nth-child(2),th:nth-child(3),td:nth-child(2),td:nth-child(3){text-align:center;}
+tbody tr:last-child td{border-bottom:0}.upcoming{background:#e0f2eb;font-weight:bold;}
+#nextPrayer{margin-top:16px;padding:14px;background:#e0f2eb;border-radius:10px;font-size:1.05rem;}
+@media(max-width:620px){
+ .container{padding:12px}.masjid-logo{width:62px;height:62px;border-radius:15px}h1{font-size:1.35rem}
+ .info-row{grid-template-columns:1fr 1fr}.clock-box{grid-column:1 / -1}.adhan-card{gap:8px}
+ .status-item strong{font-size:1.05rem}th,td{padding:9px 6px;font-size:.9rem}#countdown{font-size:1.5rem}
 }
