@@ -59,9 +59,22 @@
     });
   }
 
+  const HIJRI_MONTHS = [
+    'Muharram',
+    'Safar',
+    "Rabi' al-Awwal",
+    "Rabi' al-Aahir",
+    'Jumad al-Awwal',
+    'Jumad al-Aahir',
+    'Rajab',
+    "Sha'ban",
+    'Ramadan',
+    'Shawwal',
+    "Dhul-Qi'dah",
+    'Dhul-Hijjah'
+  ];
+
   function hijriFallback(date) {
-    // Arithmetic Islamic civil-calendar fallback if browser Intl lacks
-    // an Islamic calendar. It guarantees that the field is not blank.
     const jd = Math.floor(date.getTime() / 86400000) + 2440588;
     let l = jd - 1948440 + 10632;
     let n = Math.floor((l - 1) / 10631);
@@ -73,9 +86,7 @@
     const month = Math.floor((24 * l) / 709);
     const day = l - Math.floor((709 * month) / 24);
     const year = 30 * n + j - 30;
-    const months = ['Muharram','Safar','Rabi al-Awwal','Rabi al-Thani','Jumada al-Awwal','Jumada al-Thani',
-                    'Rajab','Shaaban','Ramadan','Shawwal','Dhul Qadah','Dhul Hijjah'];
-    return day + ' ' + months[month - 1] + ' ' + year;
+    return day + ' ' + HIJRI_MONTHS[month - 1] + ' ' + year;
   }
 
   function getHijri(date) {
@@ -83,16 +94,30 @@
       'en-u-ca-islamic-umalqura',
       'en-u-ca-islamic'
     ];
+
     for (const locale of locales) {
       try {
-        const result = new Intl.DateTimeFormat(locale, {
+        const formatter = new Intl.DateTimeFormat(locale, {
           day: 'numeric',
-          month: 'long',
+          month: 'numeric',
           year: 'numeric'
-        }).format(date);
-        if (result) return result;
+        });
+        const parts = formatter.formatToParts(date);
+        const day = Number((parts.find(p => p.type === 'day') || {}).value);
+        const month = Number((parts.find(p => p.type === 'month') || {}).value);
+        const year = Number((parts.find(p => p.type === 'year') || {}).value);
+
+        if (
+          Number.isFinite(day) &&
+          Number.isFinite(month) &&
+          Number.isFinite(year) &&
+          month >= 1 && month <= 12
+        ) {
+          return day + ' ' + HIJRI_MONTHS[month - 1] + ' ' + year;
+        }
       } catch (e) {}
     }
+
     return hijriFallback(date);
   }
 

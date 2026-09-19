@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habeebiya-masjid-v5';
+const CACHE_NAME = 'habeebiya-masjid-v7';
 const APP_SHELL = [
   './',
   './index.html',
