@@ -108,6 +108,12 @@ body{
   font-size:1.7rem;
   letter-spacing:.06em;
 }
+.countdown-card small{
+  display:block;
+  margin-top:5px;
+  font-size:.78rem;
+  opacity:.65;
+}
 
 .table-card{
   background:#fff;
