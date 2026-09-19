@@ -125,7 +125,6 @@
     const current = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
     const prayerOnly = prayers.filter(p => ['Fajr','Dhuhr','Asr','Maghrib','Isha'].includes(p.name));
 
-    // Main countdown is to Salah/congregation; keep Adhan countdown separately.
     let next = prayerOnly.find(p => Number.isFinite(p.salah) && p.salah > current);
     let targetDate = new Date(now);
 
@@ -140,7 +139,7 @@
     const adhanTarget = new Date(targetDate);
     adhanTarget.setHours(Math.floor(next.adhan / 60), next.adhan % 60, 0, 0);
 
-    return { prayer: next, adhanTarget, salahTarget };
+    return { prayer: next, salahTarget, adhanTarget };
   }
 
   function countdown(ms) {
@@ -186,12 +185,13 @@
       '<strong>Next Prayer: ' + next.name + '</strong> · Adhan ' +
       displayTime(next.adhan) + ' · Salah ' + displayTime(next.salah);
 
-    document.getElementById('countdownLabel').textContent =
-      'TIME TO ' + next.name.toUpperCase() + ' SALAH';
     document.getElementById('countdown').textContent =
       countdown(upcoming.salahTarget.getTime() - now.getTime());
-    document.getElementById('adhanCountdown').textContent =
-      'Adhan in ' + countdown(upcoming.adhanTarget.getTime() - now.getTime());
+    const adhanCountdown = document.getElementById('adhanCountdown');
+    if (adhanCountdown) {
+      adhanCountdown.textContent = 'Adhan in ' +
+        countdown(upcoming.adhanTarget.getTime() - now.getTime());
+    }
   }
 
   function updateClock() {

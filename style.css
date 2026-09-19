@@ -112,7 +112,7 @@ body{
   display:block;
   margin-top:5px;
   font-size:.78rem;
-  opacity:.65;
+  opacity:.62;
 }
 
 .table-card{
@@ -179,6 +179,7 @@ tr.upcoming{background:#e0f1eb;font-weight:700}
   .next-main span:last-child{font-size:.73rem}
   th,td{padding:9px 5px;font-size:.82rem}
   .countdown-card strong{font-size:1.45rem}
+  .countdown-card small{font-size:.72rem}
 }
 
 @media(max-width:380px){
